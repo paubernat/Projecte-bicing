@@ -6,4 +6,4 @@ from geopy.geocoders import Nominatim
 
 
 url = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
-bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id')
+bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id'
