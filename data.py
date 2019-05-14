@@ -16,7 +16,7 @@ def create_graph():
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
             distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
-            if(distance <= 0.600 and distance != 0):
+            if(distance <= 1.000 and distance != 0):
                 if not G.has_edge(node2[0], node[0]):
                     G.add_edge(node[0], node2[0], distance=distance)
     return G
@@ -27,6 +27,7 @@ def print_all(G):
     for node in list(G.node(data=True)):
         marker = CircleMarker((node[1]['lon'], node[1]['lat']), 'red', 8)
         m.add_marker(marker)
+    print(G.number_of_edges(), G.number_of_nodes())
     image = m.render()
     image.save('mapa.png')
 
