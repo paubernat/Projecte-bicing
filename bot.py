@@ -7,15 +7,14 @@ from telegram.ext import CommandHandler
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="Hello")
 
-# declara una constant amb el access token que llegeix de token.txt
-TOKEN = open('token.txt').read().strip()
+def author(bot, update):
+    bot.send_message(chat_id=update.message.chat_id, text="We are Pau Bernat and Andrea Garcia, nice to meet you!")
 
-# crea objectes per treballar amb Telegram
+TOKEN = open('token.txt').read().strip()
 updater = Updater(token=TOKEN)
 dispatcher = updater.dispatcher
 
-# indica que quan el bot rebi la comanda /start s'executi la funció start
 dispatcher.add_handler(CommandHandler('start', start))
-
+dispatcher.add_handler(CommandHandler('author', author))
 # engega el bot
 updater.start_polling()
