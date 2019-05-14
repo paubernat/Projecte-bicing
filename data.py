@@ -64,8 +64,16 @@ def addressesTOcoordinates(addresses):
 
 def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
-    location adresses
-    add_node("origin",la1,lon2)
+    i = len(adresses)
+    j = adresses.find(",")
+    origen_adress = adresses[0:j-1]
+    desti_adress = adresses [0:j+1]
+    coords = addressesTOcoordinates(adresses)
+    # aqui un error estaria gucci
+    coords_origen, coords_desti = coords
+    if not g.has_node(origen_adress, lat=coords_origen[0], lan=coords_desti[1]):
+
+
     for (node in list(G.node(data=true))):
         add_edge ()
     add_node("end", lat1, lon2)
