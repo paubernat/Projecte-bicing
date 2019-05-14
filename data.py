@@ -32,8 +32,8 @@ def print_all(G):
     image.save('mapa.png')
 
 def shortest_path(G,lat1,lon1, lat2, lon2):
-    add_node("origin",lat,lon)
-    add_node("end", lat, lon)
+    add_node("origin",la1,lon2)
+    add_node("end", lat1, lon2)
     for (node in list(G.node(data=true))):
         distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
         if (distance <= 0.600 and !=0)
