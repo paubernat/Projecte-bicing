@@ -71,9 +71,11 @@ def shortest_path(G, adresses):
     coords = addressesTOcoordinates(adresses)
     # aqui un error estaria gucci
     print (origen_adress, desti_adress)
-    coord_origen, coord_desti = coords
-    print (coords_origen, coords_desti)
+    print (coords)
     '''
+    coord_origen, coord_desti = coords
+    print (coord_origen, coord_desti)
+
     if not g.has_node(origen_adress, lat=coords_origen[0], lan=coords_desti[1]):
         g.add_node (origen_adress, lat=coords_origen[0], lan=coords_desti[1])
         for node in list(G.node(data=True)):
@@ -91,4 +93,4 @@ def shortest_path(G, adresses):
     '''
 
 print_all(create_graph())
-shortest_path(create_graph(),"La Rambla 91, Paseig de Gràcia 24")
+shortest_path(create_graph(),"La Rambla 91, Passeig de Gràcia 24")
