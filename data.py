@@ -67,7 +67,7 @@ def shortest_path(G, adresses):
     i = len(adresses)
     j = adresses.find(",")
     origen_adress = adresses[0:j-1]
-    desti_adress = adresses [0:j+1]
+    desti_adress = adresses [j+1:i-1]
     coords = addressesTOcoordinates(adresses)
     # aqui un error estaria gucci
     coords_origen, coords_desti = coords
