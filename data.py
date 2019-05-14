@@ -66,12 +66,18 @@ def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
     i = len(adresses)
     j = adresses.find(",")
-    origen_adress = adresses[0:j-1]
-    desti_adress = adresses [j+1:i-1]
+    origen_adress = adresses[0:j]
+    desti_adress = adresses [j+1:i]
     coords = addressesTOcoordinates(adresses)
     # aqui un error estaria gucci
-    coords_origen, coords_desti = coords
+    print (origen_adress, desti_adress)
+    coord_origen, coord_desti = coords
+    print (coords_origen, coords_desti)
+    '''
     if not g.has_node(origen_adress, lat=coords_origen[0], lan=coords_desti[1]):
+        g.add_node (origen_adress, lat=coords_origen[0], lan=coords_desti[1])
+        for node in list(G.node(data=True)):
+            add_edge (haversine (node,))
 
 
     for (node in list(G.node(data=true))):
@@ -82,5 +88,7 @@ def shortest_path(G, adresses):
     for (node in list(G.node(data=true))):
         distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
         if (distance <= 0.600 and !=0)
+    '''
 
 print_all(create_graph())
+shortest_path(create_graph(),"La Rambla 91, Paseig de Gràcia 24")
