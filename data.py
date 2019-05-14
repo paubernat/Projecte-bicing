@@ -1,4 +1,4 @@
-# hugo mafioso
+
 import pandas as pd
 from staticmap import StaticMap, CircleMarker, Line
 import networkx as nx
