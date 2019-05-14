@@ -32,11 +32,45 @@ def print_all(G):
     image.save('mapa.png')
 
 
-def shortest_path(G,lat1,lon1, lat2, lon2):
+
+def addressesTOcoordinates(addresses):
+    '''
+    Returns the two coordinates of two addresses of Barcelona
+    in a single string separated by a comma. In case of failure, returns None.
+
+    Examples:
+
+    >>> addressesTOcoordinates('Jordi Girona, Plaça de Sant Jaume')
+    ((41.3875495, 2.113918), (41.38264975, 2.17699121912479))
+    >>> addressesTOcoordinates('Passeig de Gràcia 92, La Rambla 51')
+    ((41.3952564, 2.1615724), (41.38082045, 2.17357087674997))
+    >>> addressesTOcoordinates('Avinguda de Jordi Cortadella, Carrer de Jordi Petit')
+    None
+    >>> addressesTOcoordinates('foo')
+    None
+    >>> addressesTOcoordinates('foo, bar, lol')
+    None
+    '''
+    try:
+        geolocator = Nominatim(user_agent="bicing_bot")
+        address1, address2 = addresses.split(',')
+        location1 = geolocator.geocode(address1 + ', Barcelona')
+        location2 = geolocator.geocode(address2 + ', Barcelona')
+        return (location1.latitude, location1.longitude), (location2.latitude, location2.longitude)
+    except:
+        return None
+
+
+
+def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
+    location adresses
     add_node("origin",la1,lon2)
+    for (node in list(G.node(data=true))):
+        add_edge ()
     add_node("end", lat1, lon2)
     #malament
+
     for (node in list(G.node(data=true))):
         distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
         if (distance <= 0.600 and !=0)
