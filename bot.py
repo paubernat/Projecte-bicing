@@ -10,6 +10,7 @@ def start(bot, update):
 def author(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="We are Pau Bernat and Andrea Garcia, nice to meet you!")
 
+
 TOKEN = open('token.txt').read().strip()
 updater = Updater(token=TOKEN)
 dispatcher = updater.dispatcher
