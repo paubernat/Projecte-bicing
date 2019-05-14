@@ -34,5 +34,8 @@ def print_all(G):
 def shortest_path(G,lat1,lon1, lat2, lon2):
     add_node("origin",lat,lon)
     add_node("end", lat, lon)
+    for (node in list(G.node(data=true))):
+        distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
+        if (distance <= 0.600 and !=0)
 
 print_all(create_graph())
