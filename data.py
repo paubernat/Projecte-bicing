@@ -51,7 +51,7 @@ def addressesTOcoordinates(addresses):
     None
     >>> addressesTOcoordinates('foo, bar, lol')
     None
-    '''
+
     try:
         geolocator = Nominatim(user_agent="bicing_bot")
         address1, address2 = addresses.split(',')
@@ -80,7 +80,7 @@ def shortest_path(G, adresses):
 
     for node in list(G.node(data=True)):
         print (node)
-    '''
+
     if G.has_node (coord_origen, lat=coord_origen[0], lon=coord_origen[1]):
         print ("tamo gucci")
     else:
@@ -108,7 +108,8 @@ def shortest_path(G, adresses):
         if (distance <= 0.600 and !=0)
 
 '''
-print_all(create_graph())
+G = create_graph()
+
 '''
 shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
 '''
