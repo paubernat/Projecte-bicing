@@ -42,11 +42,8 @@ def print_all(G):
     image = m.render()
     image.save('mapa.png')
 
-
-'''
-
 def addressesTOcoordinates(addresses):
-
+    '''
     Returns the two coordinates of two addresses of Barcelona
     in a single string separated by a comma. In case of failure, returns None.
 
@@ -62,7 +59,7 @@ def addressesTOcoordinates(addresses):
     None
     >>> addressesTOcoordinates('foo, bar, lol')
     None
-
+    '''
     try:
         geolocator = Nominatim(user_agent="bicing_bot")
         address1, address2 = addresses.split(',')
@@ -72,20 +69,22 @@ def addressesTOcoordinates(addresses):
     except:
         return None
 
-'''
 
 def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
 
     coords = addressesTOcoordinates(adresses)
-    # aqui un error estaria gucci
-    print (origen_adress, desti_adress)
-    print (coords)
-    #bucle
-    coord_origen, coord_desti = coords
-    print (coord_origen[0])
+    coords1, coords2 = coords
+    print (coords1)
 
+    for node in list (G.node(data=True)):
 
+        '''
+        if G.has_node (coords[0]):
+            print ("gucci")
+
+return
+    nx.shortest_path
     for node in list(G.node(data=True)):
         print (node)
 
@@ -118,6 +117,7 @@ def shortest_path(G, adresses):
 '''
 G = create_graph()
 print_all(G)
+shortest_path(G, "Joan Miró 2-12, Les Rambles 3" )
 
 '''
 shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
