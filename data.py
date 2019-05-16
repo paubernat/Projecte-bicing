@@ -17,13 +17,13 @@ def create_graph():
         G.add_node([st.lat,st.lon])
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
-            distance = haversine((node[0], node[1]), (node2[0], node2[1]))
-            if(distance <= 0.600 and distance != 0):
+            distance = haversine(node, node2)
+            if (distance <= 0.600 and distance != 0):
                 if not G.has_edge(node2, node):
                     G.add_edge(node[0], node2[0], distance=distance)
     return G
 
-
+'''
 def print_all(G):
     m = StaticMap(800, 800)
     for node in list(G.node(data=True)):
@@ -35,7 +35,7 @@ def print_all(G):
 
 
 def addressesTOcoordinates(addresses):
-    '''
+
     Returns the two coordinates of two addresses of Barcelona
     in a single string separated by a comma. In case of failure, returns None.
 
