@@ -1,4 +1,4 @@
-# hugo mafioso
+
 import pandas as pd
 from staticmap import StaticMap, CircleMarker, Line
 import networkx as nx
@@ -17,9 +17,15 @@ def create_graph():
         G.add_node([st.lat,st.lon])
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
+<<<<<<< HEAD
             distance = haversine(node, node2)
             if (distance <= 0.600 and distance != 0):
                 if not G.has_edge(node2, node):
+=======
+            distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
+            if(distance <= 1.000 and distance != 0):
+                if not G.has_edge(node2[0], node[0]):
+>>>>>>> 055800293b7408c71bc0bebe3e9d2b907a0bd1b0
                     G.add_edge(node[0], node2[0], distance=distance)
     return G
 
@@ -29,6 +35,7 @@ def print_all(G):
     for node in list(G.node(data=True)):
         marker = CircleMarker((node[1]['lon'], node[1]['lat']), 'red', 8)
         m.add_marker(marker)
+    print(G.number_of_edges(), G.number_of_nodes())
     image = m.render()
     image.save('mapa.png')
 
