@@ -13,12 +13,13 @@ def create_graph():
 
     G = nx.Graph()
     for st in bicing.itertuples():
-        G.add_node(st.name, lat=st.lat,lon= st.lon)
+        G.add_node((st.lon,st.lat))
+
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
-            distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
-            if(distance <= 1.000 and distance != 0):
-                if not G.has_edge(node2[0], node[0]):
+            distance = haversine(node[0],node2[0])
+            if (distance <= 0.800 and distance != 0):
+                if (not G.has_edge(node[0], node2[0])):
                     G.add_edge(node[0], node2[0], distance=distance)
     return G
 
@@ -26,16 +27,23 @@ def create_graph():
 def print_all(G):
     m = StaticMap(800, 800)
     for node in list(G.node(data=True)):
-        marker = CircleMarker((node[1]['lon'], node[1]['lat']), 'red', 8)
+        marker = CircleMarker((node[0]), 'black', 5)
         m.add_marker(marker)
+
+    for edge in list(G.edges()):
+        coords = (edge[0], edge[1])
+        line = Line(coords, 'purple', 1)
+        m.add_line(line)
+
     print(G.number_of_edges(), G.number_of_nodes())
     image = m.render()
     image.save('mapa.png')
 
 
+'''
 
 def addressesTOcoordinates(addresses):
-    '''
+
     Returns the two coordinates of two addresses of Barcelona
     in a single string separated by a comma. In case of failure, returns None.
 
@@ -51,7 +59,7 @@ def addressesTOcoordinates(addresses):
     None
     >>> addressesTOcoordinates('foo, bar, lol')
     None
-    '''
+
     try:
         geolocator = Nominatim(user_agent="bicing_bot")
         address1, address2 = addresses.split(',')
@@ -61,18 +69,41 @@ def addressesTOcoordinates(addresses):
     except:
         return None
 
-
-
+'''
+'''
 def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
     i = len(adresses)
     j = adresses.find(",")
-    origen_adress = adresses[0:j-1]
-    desti_adress = adresses [j+1:i-1]
+    origen_adress = adresses[0:j]
+    desti_adress = adresses [j+1:i]
     coords = addressesTOcoordinates(adresses)
     # aqui un error estaria gucci
-    coords_origen, coords_desti = coords
+    print (origen_adress, desti_adress)
+    print (coords)
+    #bucle
+    coord_origen, coord_desti = coords
+    print (coord_origen[0])
+
+
+    for node in list(G.node(data=True)):
+        print (node)
+
+    if G.has_node (coord_origen, lat=coord_origen[0], lon=coord_origen[1]):
+        print ("tamo gucci")
+    else:
+        print ("nword")
+
+    for node in list(G.node(data=True)):
+
+
+    coord_origen, coord_desti = coords
+    print (coord_origen, coord_desti)
+
     if not g.has_node(origen_adress, lat=coords_origen[0], lan=coords_desti[1]):
+        g.add_node (origen_adress, lat=coords_origen[0], lan=coords_desti[1])
+        for node in list(G.node(data=True)):
+            add_edge (haversine (node,))
 
 
     for (node in list(G.node(data=true))):
@@ -84,4 +115,9 @@ def shortest_path(G, adresses):
         distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
         if (distance <= 0.600 and !=0)
 
+'''
 print_all(create_graph())
+
+'''
+shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
+'''
