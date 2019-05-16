@@ -13,10 +13,11 @@ def create_graph():
 
     G = nx.Graph()
     for st in bicing.itertuples():
-        G.add_node(st.name, lat=st.lat,lon= st.lon)
+        print (st.name)
+        G.add_node([st.lat,st.lon])
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
-            distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
+            distance = haversine((node[0], node[1]), (node2[0], node2[1]))
             if(distance <= 0.600 and distance != 0):
                 if not G.has_edge(node2[0], node[0]):
                     G.add_edge(node[0], node2[0], distance=distance)
@@ -72,7 +73,22 @@ def shortest_path(G, adresses):
     # aqui un error estaria gucci
     print (origen_adress, desti_adress)
     print (coords)
+    #bucle
+    coord_origen, coord_desti = coords
+    print (coord_origen[0])
+
+
+    for node in list(G.node(data=True)):
+        print (node)
     '''
+    if G.has_node (coord_origen, lat=coord_origen[0], lon=coord_origen[1]):
+        print ("tamo gucci")
+    else:
+        print ("nword")
+
+    for node in list(G.node(data=True)):
+
+
     coord_origen, coord_desti = coords
     print (coord_origen, coord_desti)
 
@@ -90,7 +106,9 @@ def shortest_path(G, adresses):
     for (node in list(G.node(data=true))):
         distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
         if (distance <= 0.600 and !=0)
-    '''
 
+'''
 print_all(create_graph())
-shortest_path(create_graph(),"La Rambla 91, Passeig de Gràcia 24")
+'''
+shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
+'''
