@@ -19,7 +19,7 @@ def create_graph():
         for node2 in list(G.node(data=True)):
             distance = haversine((node[0], node[1]), (node2[0], node2[1]))
             if(distance <= 0.600 and distance != 0):
-                if not G.has_edge(node2[0], node[0]):
+                if not G.has_edge(node2, node):
                     G.add_edge(node[0], node2[0], distance=distance)
     return G
 
