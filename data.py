@@ -13,33 +13,37 @@ def create_graph():
 
     G = nx.Graph()
     for st in bicing.itertuples():
-        print (st.name)
-        G.add_node([st.lat,st.lon])
+        G.add_node((st.lon,st.lat))
+
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
-<<<<<<< HEAD
-            distance = haversine(node, node2)
-            if (distance <= 0.600 and distance != 0):
-                if not G.has_edge(node2, node):
-=======
-            distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
-            if(distance <= 1.000 and distance != 0):
-                if not G.has_edge(node2[0], node[0]):
->>>>>>> 055800293b7408c71bc0bebe3e9d2b907a0bd1b0
+            distance = haversine(node[0],node2[0])
+            if (distance <= 0.800 and distance != 0):
+                if (not G.has_edge(node[0], node2[0])):
                     G.add_edge(node[0], node2[0], distance=distance)
     return G
 
-'''
+
 def print_all(G):
     m = StaticMap(800, 800)
     for node in list(G.node(data=True)):
-        marker = CircleMarker((node[1]['lon'], node[1]['lat']), 'red', 8)
+        marker = CircleMarker((node[0]), 'black', 5)
         m.add_marker(marker)
+
+    for edge in list(G.edges()):
+        '''
+        coords = (edge[0][0],edge[0][1],edge[1][0],edge[1][1])
+        '''
+        coords = (edge[0], edge[1])
+        line = Line(coords, 'purple', 1)
+        m.add_line(line)
+
     print(G.number_of_edges(), G.number_of_nodes())
     image = m.render()
     image.save('mapa.png')
 
 
+'''
 
 def addressesTOcoordinates(addresses):
 
@@ -68,14 +72,11 @@ def addressesTOcoordinates(addresses):
     except:
         return None
 
-
+'''
 
 def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
-    i = len(adresses)
-    j = adresses.find(",")
-    origen_adress = adresses[0:j]
-    desti_adress = adresses [j+1:i]
+
     coords = addressesTOcoordinates(adresses)
     # aqui un error estaria gucci
     print (origen_adress, desti_adress)
@@ -116,6 +117,7 @@ def shortest_path(G, adresses):
 
 '''
 G = create_graph()
+print_all(G)
 
 '''
 shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
