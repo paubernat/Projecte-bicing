@@ -20,13 +20,14 @@ def create_graph():
             distance = haversine(node[0],node2[0])
             if (distance <= 0.800 and distance != 0):
                 if (not G.has_edge(node[0], node2[0])):
-                    G.add_edge(node[0], node2[0], distance=distance)
+                    G.add_edge(node[0], node2[0], weight=distance)
     return G
 
 
 def print_all(G):
     m = StaticMap(800, 800)
     for node in list(G.node(data=True)):
+        print (node)
         marker = CircleMarker((node[0]), 'black', 5)
         m.add_marker(marker)
 
@@ -74,51 +75,63 @@ def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
 
     coords = addressesTOcoordinates(adresses)
+    if coords == None:
+        return None
+
     coords1, coords2 = coords
-    print (coords1)
 
-    for node in list (G.node(data=True)):
-
-        '''
-        if G.has_node (coords[0]):
-            print ("gucci")
-
-return
-    nx.shortest_path
-    for node in list(G.node(data=True)):
-        print (node)
-
-    if G.has_node (coord_origen, lat=coord_origen[0], lon=coord_origen[1]):
-        print ("tamo gucci")
-    else:
-        print ("nword")
-
-    for node in list(G.node(data=True)):
-
-
-    coord_origen, coord_desti = coords
-    print (coord_origen, coord_desti)
-
-    if not g.has_node(origen_adress, lat=coords_origen[0], lan=coords_desti[1]):
-        g.add_node (origen_adress, lat=coords_origen[0], lan=coords_desti[1])
+    if (not G.has_node(coords1)):
+        G.add_node(coords1)
         for node in list(G.node(data=True)):
-            add_edge (haversine (node,))
+            distance = haversine (node[0],coords1)
+            if (distance!=0):
+                G.add_edge(node[0], coords1, weight= distance*2.5)
+    else:
+        for node in list(G.node(data=True)):
+            if (not G.has_edge(node, coords1)):
+                distance = haversine (node[0],coords1)
+                if (distance!=0):
+                    G.add_edge (node[0], coords1, weight= distance*2.5)
 
 
-    for (node in list(G.node(data=true))):
-        add_edge ()
-    add_node("end", lat1, lon2)
-    #malament
+    if (not G.has_node(coords2)):
+        G.add_node(coords2)
+        for node in list(G.node(data=True)):
+            distance = haversine (node[0],coords2)
+            if (distance!=0):
+                G.add_edge(node[0], coords2, weight= distance*2.5)
+    else:
+        for node in list(G.node(data=True)):
+            if (not G.has_edge(node, coords2)):
+                distance = haversine (node[0],coords2)
+                if (distance!=0):
+                    G.add_edge (node[0], coords2, weight= distance*2.5)
 
-    for (node in list(G.node(data=true))):
-        distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
-        if (distance <= 0.600 and !=0)
 
-'''
+    path = nx.shortest_path(G,coords1,coords2,'weight')
+    print(path)
+
+    m = StaticMap(800, 800)
+
+    print ("mida path =", len(path))
+    print ("nodes:",path)
+
+    for node in path:
+        marker = CircleMarker((node[1],node[0]), 'red', 8)
+        m.add_marker(marker)
+
+    print ("ara punts:")
+    for i in range (len(path)-1):
+        coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
+        line = Line(coords, 'green', 9)
+        m.add_line(line)
+
+    image = m.render()
+    image.save('path.png')
+
+
+
+
 G = create_graph()
 print_all(G)
-shortest_path(G, "Joan Miró 2-12, Les Rambles 3" )
-
-'''
-shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
-'''
+shortest_path(G, "Passeig de Gràcia 92, La Rambla 51" )
