@@ -7,7 +7,7 @@ from haversine import haversine
 from geopy.geocoders import Nominatim
 
 
-def create_graph():
+def create_graph(d):
     url = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
     bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id')
 
@@ -18,19 +18,23 @@ def create_graph():
     for node in list(G.node(data=True)):
         for node2 in list(G.node(data=True)):
             distance = haversine(node[0],node2[0])
-            if (distance <= 0.800 and distance != 0):
+            if (distance <= d and distance != 0):
                 if (not G.has_edge(node[0], node2[0])):
-                    G.add_edge(node[0], node2[0], distance=distance)
+                    G.add_edge(node[0], node2[0], weight=distance)
     return G
 
 
 def print_all(G):
     m = StaticMap(800, 800)
     for node in list(G.node(data=True)):
+        print(node)
         marker = CircleMarker((node[0]), 'black', 5)
         m.add_marker(marker)
 
     for edge in list(G.edges()):
+        '''
+        coords = (edge[0][0],edge[0][1],edge[1][0],edge[1][1])
+        '''
         coords = (edge[0], edge[1])
         line = Line(coords, 'purple', 1)
         m.add_line(line)
@@ -39,27 +43,7 @@ def print_all(G):
     image = m.render()
     image.save('mapa.png')
 
-
-'''
-
 def addressesTOcoordinates(addresses):
-
-    Returns the two coordinates of two addresses of Barcelona
-    in a single string separated by a comma. In case of failure, returns None.
-
-    Examples:
-
-    >>> addressesTOcoordinates('Jordi Girona, Plaça de Sant Jaume')
-    ((41.3875495, 2.113918), (41.38264975, 2.17699121912479))
-    >>> addressesTOcoordinates('Passeig de Gràcia 92, La Rambla 51')
-    ((41.3952564, 2.1615724), (41.38082045, 2.17357087674997))
-    >>> addressesTOcoordinates('Avinguda de Jordi Cortadella, Carrer de Jordi Petit')
-    None
-    >>> addressesTOcoordinates('foo')
-    None
-    >>> addressesTOcoordinates('foo, bar, lol')
-    None
-
     try:
         geolocator = Nominatim(user_agent="bicing_bot")
         address1, address2 = addresses.split(',')
@@ -69,55 +53,61 @@ def addressesTOcoordinates(addresses):
     except:
         return None
 
-'''
-'''
+
 def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
-    i = len(adresses)
-    j = adresses.find(",")
-    origen_adress = adresses[0:j]
-    desti_adress = adresses [j+1:i]
+
     coords = addressesTOcoordinates(adresses)
-    # aqui un error estaria gucci
-    print (origen_adress, desti_adress)
-    print (coords)
-    #bucle
-    coord_origen, coord_desti = coords
-    print (coord_origen[0])
+    if coords == None:
+        return None
 
+    coords1, coords2 = coords
 
-    for node in list(G.node(data=True)):
-        print (node)
-
-    if G.has_node (coord_origen, lat=coord_origen[0], lon=coord_origen[1]):
-        print ("tamo gucci")
-    else:
-        print ("nword")
-
-    for node in list(G.node(data=True)):
-
-
-    coord_origen, coord_desti = coords
-    print (coord_origen, coord_desti)
-
-    if not g.has_node(origen_adress, lat=coords_origen[0], lan=coords_desti[1]):
-        g.add_node (origen_adress, lat=coords_origen[0], lan=coords_desti[1])
+    if (not G.has_node(coords1)):
+        G.add_node(coords1)
         for node in list(G.node(data=True)):
-            add_edge (haversine (node,))
+            distance = haversine (node[0],coords1)
+            if (distance!=0):
+                G.add_edge(node[0], coords1, weight= distance*2.5)
+    else:
+        for node in list(G.node(data=True)):
+            if (not G.has_edge(node, coords1)):
+                distance = haversine (node[0],coords1)
+                if (distance!=0):
+                    G.add_edge (node[0], coords1, weight= distance*2.5)
 
 
-    for (node in list(G.node(data=true))):
-        add_edge ()
-    add_node("end", lat1, lon2)
-    #malament
+    if (not G.has_node(coords2)):
+        G.add_node(coords2)
+        for node in list(G.node(data=True)):
+            distance = haversine(node[0],coords2)
+            if (distance!=0):
+                G.add_edge(node[0], coords2, weight=distance*2.5)
+    else:
+        for node in list(G.node(data=True)):
+            if (not G.has_edge(node, coords2)):
+                distance = haversine(node[0],coords2)
+                if (distance!= 0):
+                    G.add_edge (node[0], coords2, weight=distance*2.5)
 
-    for (node in list(G.node(data=true))):
-        distance = haversine((node[1]['lon'], node[1]['lat']), (node2[1]['lon'], node2[1]['lat']))
-        if (distance <= 0.600 and !=0)
 
-'''
-print_all(create_graph())
+    path = nx.shortest_path(G, coords1, coords2, weight='weight')
+    print(path)
 
-'''
-shortest_path(create_graph(),"BRUC 45, Passeig de Gràcia 24")
-'''
+    m = StaticMap(800, 800)
+
+    print ("mida path =", len(path))
+    print ("nodes:",path)
+
+    for node in path:
+        marker = CircleMarker((node[1],node[0]), 'red', 8)
+        m.add_marker(marker)
+
+    print ("ara punts:")
+    for i in range (len(path)-1):
+        coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
+        line = Line(coords, 'green', 9)
+        m.add_line(line)
+
+    image = m.render()
+    image.save('path.png')
