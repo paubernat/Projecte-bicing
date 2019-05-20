@@ -1,4 +1,3 @@
-
 import pandas as pd
 from staticmap import StaticMap, CircleMarker, Line
 import networkx as nx
@@ -15,20 +14,20 @@ def create_graph():
     for st in bicing.itertuples():
         G.add_node((st.lon,st.lat))
 
-    for node in list(G.node(data=True)):
-        for node2 in list(G.node(data=True)):
-            distance = haversine(node[0],node2[0])
-            if (distance <= 0.800 and distance != 0):
-                if (not G.has_edge(node[0], node2[0])):
-                    G.add_edge(node[0], node2[0], weight=distance)
+    for node in list(G.node()):
+        for node2 in list(G.node()):
+            distance = haversine(node,node2)
+            if (distance <= 0.500 and distance != 0):
+                if (not G.has_edge(node, node2)):
+                    G.add_edge(node, node2, weight=distance)
     return G
 
 
 def print_all(G):
     m = StaticMap(800, 800)
-    for node in list(G.node(data=True)):
+    for node in list(G.node()):
         print (node)
-        marker = CircleMarker((node[0]), 'black', 5)
+        marker = CircleMarker(node, 'black', 5)
         m.add_marker(marker)
 
     for edge in list(G.edges()):
@@ -82,45 +81,56 @@ def shortest_path(G, adresses):
 
     if (not G.has_node(coords1)):
         G.add_node(coords1)
-        for node in list(G.node(data=True)):
-            distance = haversine (node[0],coords1)
+        for node in list(G.node()):
+            distance = haversine (node,coords1)
             if (distance!=0):
-                G.add_edge(node[0], coords1, weight= distance*2.5)
+                G.add_edge(node, coords1, weight= distance*2.5)
     else:
-        for node in list(G.node(data=True)):
+        for node in list(G.node()):
             if (not G.has_edge(node, coords1)):
-                distance = haversine (node[0],coords1)
+                distance = haversine (node,coords1)
                 if (distance!=0):
-                    G.add_edge (node[0], coords1, weight= distance*2.5)
+                    G.add_edge (node, coords1, weight= distance*2.5)
 
 
     if (not G.has_node(coords2)):
         G.add_node(coords2)
-        for node in list(G.node(data=True)):
-            distance = haversine (node[0],coords2)
+        for node in list(G.node()):
+            distance = haversine (node,coords2)
             if (distance!=0):
-                G.add_edge(node[0], coords2, weight= distance*2.5)
+                G.add_edge(node, coords2, weight= distance*2.5)
     else:
-        for node in list(G.node(data=True)):
+        for node in list(G.node()):
             if (not G.has_edge(node, coords2)):
-                distance = haversine (node[0],coords2)
+                distance = haversine (node,coords2)
                 if (distance!=0):
-                    G.add_edge (node[0], coords2, weight= distance*2.5)
+                    G.add_edge (node, coords2, weight= distance*2.5)
 
+    for node in list(G.node()):
+        print (node)
 
-    path = nx.shortest_path(G,coords1,coords2,'weight')
-    print(path)
+    '''
+    print ("nodes")
+    print ()
+    for node in  list (G.node()):
+        print (node)
+
+    print ("edges")
+    print()
+    for edge in list (G.edges()):
+        print (edge, edge.weight())
+    '''
+    lenght, path = nx.bidirectional_dijkstra(G,coords1,coords2)
+    print (path)
+    print (lenght)
 
     m = StaticMap(800, 800)
 
-    print ("mida path =", len(path))
-    print ("nodes:",path)
-
     for node in path:
+
         marker = CircleMarker((node[1],node[0]), 'red', 8)
         m.add_marker(marker)
 
-    print ("ara punts:")
     for i in range (len(path)-1):
         coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
         line = Line(coords, 'green', 9)
@@ -134,4 +144,4 @@ def shortest_path(G, adresses):
 
 G = create_graph()
 print_all(G)
-shortest_path(G, "Passeig de Gràcia 92, La Rambla 51" )
+shortest_path(G, "Gran via corts catalanes 760, La Rambla 51" )
