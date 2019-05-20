@@ -28,4 +28,3 @@ def bounging_box(dist):
 
 def grid(n, m):
     Matrix = []
-  
