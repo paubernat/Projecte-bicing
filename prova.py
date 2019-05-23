@@ -1,5 +1,21 @@
+dispatcher.add_handler(CommandHandler('nodes',  nodes))
+dispatcher.add_handler(CommandHandler('edges', edges))
+dispatcher.add_handler(CommandHandler('components', components))
 
 
+
+def nodes(bot, update):
+    nodes = data.number_of_nodes(graph)
+    bot.send_message(chat_id=update.message.chat_id, text=nodes)
+
+def edges(bot, update):
+
+    edges = data.number_of_edges(graph)
+    bot.send_message(chat_id=update.message.chat_id, text=edges)
+
+def components(bot, update):
+    components = data.number_connected_components(graph)
+    bot.send_message(chat_id=update.message.chat_id, text=components)
 
 def bounging_box(dist):
     #Bounding Box
@@ -27,4 +43,4 @@ def bounging_box(dist):
 
 
 def grid(n, m):
-    Matrix = []
+    Matrix = [[]]

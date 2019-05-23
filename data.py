@@ -1,12 +1,12 @@
-import pandas as pd
 from staticmap import StaticMap, CircleMarker, Line
 import networkx as nx
 from pandas import DataFrame
 from haversine import haversine
 from geopy.geocoders import Nominatim
+import string
 
 
-def create_graph(d):
+def create_graph(dist):
     url = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
     bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id')
 
@@ -17,7 +17,7 @@ def create_graph(d):
     for node in list(G.node()):
         for node2 in list(G.node()):
             distance = haversine(node,node2)
-            if (distance <= d and distance != 0):
+            if (distance <= dist and distance != 0):
                 if (not G.has_edge(node, node2)):
                     G.add_edge(node, node2, weight=distance)
     return G

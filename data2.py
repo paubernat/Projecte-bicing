@@ -9,7 +9,9 @@ from geopy.geocoders import Nominatim
 #staticmap (lon,lat)
 #ourgraph (lat,lon)
 
-def create_graph():
+#creates the graph with n size as the maximum size of an edge.
+def create_graph(d):
+    #we using a data base from Barcelona's bicing stations
     url = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
     bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id')
 
@@ -17,15 +19,16 @@ def create_graph():
     for st in bicing.itertuples():
         G.add_node((st.lat,st.lon))
 
+    #we add all edges smaller than n.
     for node in list(G.node()):
         for node2 in list(G.node()):
             distance = haversine(node,node2)
-            if (distance <= 0.500 and distance != 0):
+            if (distance <= d and distance != 0):
                 if (not G.has_edge(node, node2)):
                     G.add_edge(node, node2, weight=distance)
     return G
 
-
+#prints the graph edges and nodes using StaticMap
 def print_all(G):
     m = StaticMap(800, 800)
     for node in list(G.node()):
@@ -33,33 +36,13 @@ def print_all(G):
         m.add_marker(marker)
 
     for edge in list(G.edges()):
-
         coords = ((edge[0][1],edge[0][0]),(edge[1][1],edge[1][0]))
         line = Line(coords, 'purple', 1)
         m.add_line(line)
+    return m
 
-    print(G.number_of_edges(), G.number_of_nodes())
-    image = m.render()
-    image.save('mapa.png')
-
+#transforms adresses to coordinates
 def addressesTOcoordinates(addresses):
-    '''
-    Returns the two coordinates of two addresses of Barcelona
-    in a single string separated by a comma. In case of failure, returns None.
-
-    Examples:
-
-    >>> addressesTOcoordinates('Jordi Girona, Plaça de Sant Jaume')
-    ((41.3875495, 2.113918), (41.38264975, 2.17699121912479))
-    >>> addressesTOcoordinates('Passeig de Gràcia 92, La Rambla 51')
-    ((41.3952564, 2.1615724), (41.38082045, 2.17357087674997))
-    >>> addressesTOcoordinates('Avinguda de Jordi Cortadella, Carrer de Jordi Petit')
-    None
-    >>> addressesTOcoordinates('foo')
-    None
-    >>> addressesTOcoordinates('foo, bar, lol')
-    None
-    '''
     try:
         geolocator = Nominatim(user_agent="bicing_bot")
         address1, address2 = addresses.split(',')
@@ -69,73 +52,36 @@ def addressesTOcoordinates(addresses):
     except:
         return None
 
-
-def shortest_path(G, adresses):
-    #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
-
-    coords = addressesTOcoordinates(adresses)
-    if coords == None:
-        return None
-
-    coords1, coords2 = coords
-
-    if (not G.has_node(coords1)):
-        G.add_node(coords1)
-        for node in list(G.node()):
-            distance = haversine (node,coords1)
-            if (distance!=0):
-                G.add_edge(node, coords1, weight= distance*2.5)
-    else:
-        for node in list(G.node()):
-            if (not G.has_edge(node, coords1)):
-                distance = haversine (node,coords1)
-                if (distance!=0):
-                    G.add_edge (node, coords1, weight= distance*2.5)
-
-
-    if (not G.has_node(coords2)):
-        G.add_node(coords2)
-        for node in list(G.node()):
-            distance = haversine (node,coords2)
-            if (distance!=0):
-                G.add_edge(node, coords2, weight= distance*2.5)
-    else:
-        for node in list(G.node()):
-            if (not G.has_edge(node, coords2)):
-                distance = haversine (node,coords2)
-                if (distance!=0):
-                    G.add_edge (node, coords2, weight= distance*2.5)
-
+def complete_known_edge (G, coords):
     for node in list(G.node()):
-        print (node)
+        if (not G.has_edge(node, coords)):
+            distance = haversine (node,coords)
+            if (distance!=0):
+                G.add_edge (node, coords, weight= distance*2.5)
 
+#matches a new node with every single node
+def complete_new_edge (G,coords):
+    G.add_node(coords)
+    for node in list(G.node()):
+        distance = haversine (node,coords)
+        if (distance!=0):
+            G.add_edge(node, coords, weight= distance*2.5)
 
-    for edge in list (G.edges()):
-        print (edge)
-
-    lenght, path = nx.bidirectional_dijkstra(G,coords1,coords2)
-    print (path)
-    print (lenght)
+#matches an existent node with every single node
+def print_path_in_graph (G, path):
 
     m = StaticMap(800, 800)
 
-    G.remove_node(coords1)
-    G.remove_node(coords2)
-
     for node in list(G.node()):
-
         marker = CircleMarker((node[1],node[0]), 'black', 5)
         m.add_marker(marker)
 
     for edge in list(G.edges()):
-
         coords = ((edge[0][1],edge[0][0]),(edge[1][1],edge[1][0]))
         line = Line(coords, 'grey', 1)
         m.add_line(line)
 
-
     for node in path:
-
         marker = CircleMarker((node[1],node[0]), 'blue', 3)
         m.add_marker(marker)
 
@@ -145,13 +91,57 @@ def shortest_path(G, adresses):
         m.add_line(line)
 
     image = m.render()
-    image.save('path.png')
+    image.save('path_in_graph.png')
+
+#prints the smallest path between 2 points
+def print_path_solo (path):
+
+    m = StaticMap(800,800)
+
+    for node in path:
+        marker = CircleMarker((node[1],node[0]), 'blue', 3)
+        m.add_marker(marker)
+
+    for i in range (len(path)-1):
+        coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
+        line = Line(coords, 'blue', 2)
+        m.add_line(line)
+
+    image = m.render()
+    image.save('path_solo.png')
+
+#prints the smallest distance in time between 2 points.
+def shortest_path(G, adresses):
+    #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
+    coords = addressesTOcoordinates(adresses)
+    if coords == None:
+        return None
+    coords1, coords2 = coords
+
+    if (not G.has_node(coords1)):
+        complete_new_edge(G,coords1)
+    else:
+        complete_known_edge(G,cords1)
+
+    if (not G.has_node(coords2)):
+        complete_new_edge(G,coords2)
+    else:
+        complete_known_edge(G,cords2)
+
+    lenght, path = nx.bidirectional_dijkstra(G,coords1,coords2)
+
+    G.remove_node(coords1)
+    G.remove_node(coords2)
+
+    print_path_in_graph (G,path)
+    print_path_solo (path)
 
 
+def number_of_non_connex_components (G):
+    return str(nx.number_connected_components(G))
 
+def number_of_nodes (G):
+    return str(len(G))
 
-
-
-
-G = create_graph()
-shortest_path(G, "Gran via corts catalanes 760, La Rambla 51" )
+def number_of_edges (G):
+    return str(nx.number_of_edges(G))
