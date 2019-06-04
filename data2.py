@@ -65,7 +65,7 @@ def edge_adder (G,d):
 
 
 #creates the graph with n size as the maximum size of an edge.
-def create_graph():
+def create_graph(dist):
     #we using a data base from Barcelona's bicing stations
     url = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
     bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id')
@@ -74,7 +74,7 @@ def create_graph():
         G.add_node((st.lat,st.lon),bikes= 0, docks=0)
 
     #we add all edges smaller than n.
-    edge_adder(G,0.9)
+    edge_adder(G, dist)
     return G
 
 
@@ -89,22 +89,9 @@ def print_all(G):
         coords = ((edge[0][1],edge[0][0]),(edge[1][1],edge[1][0]))
         line = Line(coords, 'purple', 1)
         m.add_line(line)
+    print('plot')
+    return m
 
-    image = m.render()
-    image.save('mapa.png')
-    
-#funcio per actualiztar la info de
-def actualize_g (G):
-    url_info = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
-    url_status = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_status'
-    stations = DataFrame.from_records(pd.read_json(url_info)['data']['stations'], index='station_id')
-    bikes = DataFrame.from_records(pd.read_json(url_status)['data']['stations'], index='station_id')
-
-    stations = stations[['lat','lon']]
-    bikes = bikes[['num_bikes_available', 'num_docks_available']] # We only select the interesting columns
-    print(bikes)
-    print(stations)
-    #no passo d'aqui no entenc que collons haig de fer jaja
 
 #transforms adresses to coordinates
 def addressesTOcoordinates(addresses):
@@ -154,9 +141,7 @@ def print_path_in_graph (G, path):
         coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
         line = Line(coords, 'blue', 2)
         m.add_line(line)
-
-    image = m.render()
-    image.save('path_in_graph.png')
+    return m
 
 #prints the smallest path between 2 points
 def print_path_solo (path):
@@ -171,15 +156,13 @@ def print_path_solo (path):
         coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
         line = Line(coords, 'blue', 2)
         m.add_line(line)
-
-    image = m.render()
-    image.save('path_solo.png')
-
+    return m
 
 #prints the smallest distance in time between 2 points.
 def shortest_path(G, adresses):
     #funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
     coords = addressesTOcoordinates(adresses)
+    print(coords)
     if coords == None:
         return None
     coords1, coords2 = coords
@@ -188,7 +171,6 @@ def shortest_path(G, adresses):
     #per a evitar operacions innecessàries, la velocitat bici es va a 10km/h i caminant a 4km/h,
     #sabem que es trigarà 2,5 vegades més anant caminant, per tant, multipliquem la distancia de
     #trobar el shortest_path serà el mateix
-
     if (not G.has_node(coords1)):
         complete_new_edge(G,coords1)
     else:
@@ -203,9 +185,7 @@ def shortest_path(G, adresses):
 
     G.remove_node(coords1)
     G.remove_node(coords2)
-
-    print_path_in_graph (G,path)
-    print_path_solo (path)
+    return path
 
 
 def number_of_non_connex_components (G):
@@ -216,8 +196,3 @@ def number_of_nodes (G):
 
 def number_of_edges (G):
     return nx.number_of_edges(G)
-
-
-
-G = create_graph()
-actualize_g(G)
