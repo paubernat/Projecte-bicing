@@ -17,19 +17,19 @@ D'altra banda, val la pena destacar algunes funcions en especial:
 ->/plotgraph: pinta el graf creat.
 
 
-Estructura 
-'''
+## Estructura 
+
 El projecte, com ja s'ha explicat anteriorment, està estructurat en dos grans blocs: l'arxiu data.py i l'arxiu bot.py.
-El primer arxiu conté una sèrie de funcions com la creació d'un graph amb les estacions de bicing de barcelona, el camí més curt entre dues parades de bicing o
-quants kilometres caldria recorrer per a distribuir un mínim de x bicis o y molls. Aquestes funcions seran explicades posteriorment i probades en un joc de proves.
+El primer arxiu conté una sèrie de funcions com la creació d'un graph amb les estacions de bicing de barcelona, el camí més curt entre dues parades de bicing o quants kilometres caldria recorrer per a distribuir un mínim de x bicis o y molls. Aquestes funcions seran explicades posteriorment i probades en un joc de proves.
+
 La segona part del projecte és el codi per a l'execució d'un bot de telgram. Aquest bot respon a certes comandes usant les funcions del data.py.
-Aquesta separació entre data i bot permet que les funcions siguin reutilitzables en el cas de que faci falta crear un bot per una altra aplicació o 
-implementar alguna de les funcions en algun altre programa. 
+
+Aquesta separació entre data i bot permet que les funcions siguin reutilitzables en el cas de que faci falta crear un bot per una altra aplicació o implementar alguna de les funcions en algun altre programa. 
 Per últim, totes les funcions s'executen en temps O(|V|+|E|)log(|V|).
-D'altra banda, l'arxiu "requeriments.txt" conté instruccions per a la instalació de les llibreries que permeten l'execució dels programes.
-Tot i això, només tenint un telèfon amb l'aplicació tèlegram esdevè fàcil xatejar amb el bot: només fa falta que busqueu @botbicingbot i proveu les comandes que s'expliquen a continuacio.
-'''
-Funcions
+
+D'altra banda, l'arxiu "requeriments.txt" conté instruccions per a la instalació de les llibreries que permeten l'execució dels programes. Tot i això, només tenint un telèfon amb l'aplicació tèlegram esdevè fàcil xatejar amb el bot: només fa falta que busqueu @botbicingbot a Telgram i proveu les comandes que s'expliquen a continuacio.
+
+## Funcions
 '''
 Les funcions creades en el data.py són les següents:
 ->Create_graph(d): Crea un graf on els nodes són les estacions de Bicing Barcelona i on es crea una aresta entre cada dues estacions separades per menys de la distància d.
