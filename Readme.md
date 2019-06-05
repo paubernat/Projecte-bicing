@@ -30,32 +30,50 @@ Per últim, totes les funcions s'executen en temps O(|V|+|E|)log(|V|).
 D'altra banda, l'arxiu "requeriments.txt" conté instruccions per a la instalació de les llibreries que permeten l'execució dels programes. Tot i això, només tenint un telèfon amb l'aplicació tèlegram esdevè fàcil xatejar amb el bot: només fa falta que busqueu @botbicingbot a Telgram i proveu les comandes que s'expliquen a continuacio.
 
 ## Funcions
-'''
+
 Les funcions creades en el data.py són les següents:
+
 ->Create_graph(d): Crea un graf on els nodes són les estacions de Bicing Barcelona i on es crea una aresta entre cada dues estacions separades per menys de la distància d.
+
 ->Print_all(G): Dibuixa el graf creat amb tots els nodes i arestes.
+
 ->Shortest_path(G,"direccio 1", "direccio 2"): Troba el camí més curt entre dos punts de Barcelona, tenint en compte que es més ràpid usar una bici que anar caminant.
+
 ->Number_of_non_connex_comonents(G): Retorna el nombre de components no connexes del graf.
-->Number_of_nodes(G): Retorna el nombre de estacions de bicing de Barcelona
+
+->Number_of_nodes(G): Retorna el nombre de estacions de bicing de Barcelona.
+
 ->Number_of_edges(G): Retorna el nombre de arestes del graf creat.
+
 ->Distribute(G,x,y): Retorna el nombre de km que s'haurien de realitzar per a poder tenir com a mínim x bicicletes i y espais en totes les estacions.
-'''
-Comandes del bot
-'''
+
+## Comandes del bot
+
 El bot respon a les comandes següents:
+
 ->/start: inicia el programa.
+
 ->/graph x: crea un graf usant la funció Create_graph(x). Cal mencionar que les funcions a continuació que usen un graf G usen aquest graf.
+
 ->/plotgraph: usa la comanda Print_all(G) per a crear una imatge del graf i la envia.
+
 ->/path "direccio 1" "direccio 2": usa la comanda Shortest_path(G,"direccio 1", "direccio 2") per a crear i enviar dues imatges, una només amb el camí entre les dues direccions i l'altre amb el graf de Barcelona inclòs.
+
 ->/components: envia un missatge amb el resultat de Number_of_non_connex_comonents(G)
+
 ->/nodes:envia un misstge amb el resultat de Number_of_nodes(G)
+
 ->/edges:envia un missatge amb el resultat de Number_of_edges(G)
+
 ->/distribute x y: usa la comanda distribute(G,x,y) i envia un missatge amb l'aresta amb de cost màxim i el cost total.
+
 ->/authors: envia un missatge amb el nom dels autors.
+
 ->/help: envia un missatge amb informació d'ajuda per a l'us de les funcions.
-'''
-Joc de proves:
-'''
-Autors:
+
+## Joc de proves:
+
+## Autors:
+
 Els autors d'aquest projecte som Andrea García Valdés i Pau Bernat Rodríguez, alumnes del 1er curs del GCED cursants de l'assignatura algorisimia i programació II.
 
