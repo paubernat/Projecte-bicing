@@ -19,7 +19,8 @@ D'altra banda, val la pena destacar algunes funcions en especial:
 
 ## Estructura 
 
-El projecte, com ja s'ha explicat anteriorment, està estructurat en dos grans blocs: l'arxiu data.py i l'arxiu bot.py.
+El projecte, com ja s'ha explicat anteriorment, està estructurat en dos grans blocs: l'arxiu **data.py** i l'arxiu **bot.py**.
+
 El primer arxiu conté una sèrie de funcions com la creació d'un graph amb les estacions de bicing de barcelona, el camí més curt entre dues parades de bicing o quants kilometres caldria recorrer per a distribuir un mínim de x bicis o y molls. Aquestes funcions seran explicades posteriorment i probades en un joc de proves.
 
 La segona part del projecte és el codi per a l'execució d'un bot de telgram. Aquest bot respon a certes comandes usant les funcions del data.py.
