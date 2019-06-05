@@ -90,7 +90,7 @@ def create_graph(dist):
 
 
 # prints the graph edges and nodes using StaticMap
-def print_all(G):
+def print_all(G, file):
     m = StaticMap(800, 800)
     for node in list(G.node()):
         marker = CircleMarker((node[1], node[0]), 'black', 5)
@@ -99,7 +99,8 @@ def print_all(G):
         coords = ((edge[0][1], edge[0][0]), (edge[1][1], edge[1][0]))
         line = Line(coords, 'purple', 1)
         m.add_line(line)
-    return m
+    image = m.render()
+    image.save(file)
 
 
 # transforms adresses to coordinates
@@ -132,7 +133,7 @@ def complete_new_edge(G, coords):
 
 
 # matches an existent node with every single node
-def print_path_in_graph(G, path):
+def print_path_in_graph(G, path, file):
     m = StaticMap(800, 800)
     for node in list(G.node()):
         marker = CircleMarker((node[1], node[0]), 'black', 5)
@@ -148,11 +149,13 @@ def print_path_in_graph(G, path):
         coords = ((path[i][1], path[i][0]), (path[i+1][1], path[i+1][0]))
         line = Line(coords, 'blue', 2)
         m.add_line(line)
-    return m
+    image = m.render()
+    image.save(file)
+
 
 
 # prints the smallest path between 2 points using StaticMap
-def print_path_solo(path):
+def print_path_solo(path, file):
     m = StaticMap(800, 800)
     for node in path:
         marker = CircleMarker((node[1], node[0]), 'blue', 3)
@@ -161,7 +164,8 @@ def print_path_solo(path):
         coords = ((path[i][1], path[i][0]), (path[i+1][1], path[i+1][0]))
         line = Line(coords, 'blue', 2)
         m.add_line(line)
-    return m
+    image = m.render()
+    image.save(file)
 
 
 # prints the smallest distance in time between 2 points.
@@ -269,6 +273,8 @@ def distribute(requiredBikes, requiredDocks, R):
 
     try:
         flowCost, flowDict = nx.network_simplex(G)
+        if flowCost == 0:
+            return 0.0, 0.0
     except nx.NetworkXUnfeasible:
         err = True
         return -1, 0
@@ -276,7 +282,7 @@ def distribute(requiredBikes, requiredDocks, R):
         err = True
         return -2, 0
     if not err:
-        c = ("The total cost of transfering bikes is", flowCost/1000, "km")
+        c = flowCost/1000
     # We update the status of the stations according to the calculated transportation of bicycles
     disb = []
     for src in flowDict:
@@ -295,6 +301,3 @@ def distribute(requiredBikes, requiredDocks, R):
     # Returns the total cost of transfering bikes and the maximum
     # cost between two stations
     return c, max(disb)
-
-G = create_graph(0.6)
-print_all(G)
