@@ -7,12 +7,9 @@ from geopy.geocoders import Nominatim
 import itertools as it
 from PIL import Image
 
-#haversine (lat,lon)
-#staticmap (lon,lat)
-#ourgraph (lat,lon)
+##----------CREATE THE GRAPH IN LINEAR TIME----------##
 
-def Bounding_box(G):
-    #Bounding Box
+def Bounding_box(G): #create the bounding box of all the bicing stations coordinates, The function returns the vertices coordinates
     L = list(G.node())
     max_lat, max_lon = L[0]
     min_lat, min_lon = L[0]
@@ -29,14 +26,15 @@ def Bounding_box(G):
     coords = ((min_lat, min_lon),(max_lat, min_lon),(max_lat, max_lon),(min_lat, max_lon))
     return coords
 
-def cross (A,i,j,ii,jj,G,d):
+def cross (A,i,j,ii,jj,G,d): #create the edges between nodes with the correct distance
     for node1 in A[i][j]:
         for node2 in A[ii][jj]:
-            dist = haversine(node1,node2)
-            if (dist <= d):
-                G.add_edge(node1,node2,weight=dist)
+            if node1 != node2:
+                dist = haversine(node1,node2)
+                if (dist <= d):
+                    G.add_edge(node1,node2,weight=dist)
 
-def add_edge_quadrant (G,A,d,lat_rows, long_columns):
+def add_edge_quadrant (G,A,d,lat_rows, long_columns): #look at the necessary quadrants around to know the edges that must be added
     for i in range (lat_rows):
         for j in range (long_columns):
             cross (A,i,j,i,j,G,d)
@@ -49,7 +47,8 @@ def add_edge_quadrant (G,A,d,lat_rows, long_columns):
             if (i+1<lat_rows):
                 cross (A,i+1,j,i,j,G,d)
 
-def edge_adder (G,d):
+def edge_adder (G,d): #create a matrix using the boundingbox function and divide it into quadrants
+                      #according to the established distance, then reverse the nodes in the quadrants according to their coordinates
     coord = Bounding_box(G)
     lat_m, long_m = haversine (coord[0],coord[1]), haversine (coord[1],coord[2])
     lat_ang, long_ang = coord [1][0] - coord [0][0], coord [2][1]- coord [1][1]
@@ -59,10 +58,7 @@ def edge_adder (G,d):
     for node in list(G.node()):
         lat,lon = int((node[0]-coord[0][0])//dist_ang),int((node[1]-coord[0][1])//dist_ang)
         A[lat][lon].append(node)
-
     add_edge_quadrant (G,A,d,lat_rows, long_columns)
-    print ("edges", number_of_edges(G))
-
 
 #creates the graph with n size as the maximum size of an edge.
 def create_graph(dist):
@@ -77,6 +73,8 @@ def create_graph(dist):
     edge_adder(G, dist)
     return G
 
+##---------------------------------------------------##
+
 
 #prints the graph edges and nodes using StaticMap
 def print_all(G):
@@ -84,12 +82,10 @@ def print_all(G):
     for node in list(G.node()):
         marker = CircleMarker((node[1],node[0]), 'black', 5)
         m.add_marker(marker)
-
     for edge in list(G.edges()):
         coords = ((edge[0][1],edge[0][0]),(edge[1][1],edge[1][0]))
         line = Line(coords, 'purple', 1)
         m.add_line(line)
-    print('plot')
     return m
 
 
@@ -143,15 +139,12 @@ def print_path_in_graph (G, path):
         m.add_line(line)
     return m
 
-#prints the smallest path between 2 points
+#prints the smallest path between 2 points using StaticMap
 def print_path_solo (path):
-
     m = StaticMap(800,800)
-
     for node in path:
         marker = CircleMarker((node[1],node[0]), 'blue', 3)
         m.add_marker(marker)
-
     for i in range (len(path)-1):
         coords = ((path[i][1],path[i][0]),(path[i+1][1],path[i+1][0]))
         line = Line(coords, 'blue', 2)
@@ -167,10 +160,10 @@ def shortest_path(G, adresses):
         return None
     coords1, coords2 = coords
 
-    #afegim els punts de origen i de arribada com a nodes.
-    #per a evitar operacions innecessàries, la velocitat bici es va a 10km/h i caminant a 4km/h,
-    #sabem que es trigarà 2,5 vegades més anant caminant, per tant, multipliquem la distancia de
-    #trobar el shortest_path serà el mateix
+    # We add the origin and arrival points as nodes.
+    #to avoid unnecessary operations, bike speed is at 10km / h and walking at 4km / h,
+    # we know that it will take 2.5 times more walking, therefore, we multiply the distance of
+    # checking the shortest_path will be the same
     if (not G.has_node(coords1)):
         complete_new_edge(G,coords1)
     else:
@@ -187,17 +180,20 @@ def shortest_path(G, adresses):
     G.remove_node(coords2)
     return path
 
-
+#Returns the number of connex components of the graph
 def number_of_non_connex_components (G):
     return nx.number_connected_components(G)
 
+#Returns the number of nodes of the graph
 def number_of_nodes (G):
     return len(G)
 
+#Returns the number of edges of the graph
 def number_of_edges (G):
     return nx.number_of_edges(G)
 
-def distribute (radius, requiredBikes, requiredDocks):
+#Distributes the  bikes the way each station has a minimum of bikes and docks, creating a flow
+def distribute (requiredBikes, requiredDocks, R):
     url_info = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_information'
     url_status = 'https://api.bsmsa.eu/ext/api/bsm/gbfs/v2/en/station_status'
     stations = DataFrame.from_records(pd.read_json(url_info)['data']['stations'], index='station_id')
@@ -214,7 +210,7 @@ def distribute (radius, requiredBikes, requiredDocks):
 
     for st in bikes.itertuples():
         idx = st.Index
-        if idx not in stations.index: continue  # Salta a la seguent iteracio
+        if idx not in stations.index: continue  #if the stations are not in both DataFrame's, ignore them
         idx = st.Index
         stridx = str(idx)
 
@@ -228,7 +224,6 @@ def distribute (radius, requiredBikes, requiredDocks):
         req_bikes = max(0, requiredBikes - b)
         req_docks = max(0, requiredDocks - d)
 
-        # Some of the following edges require attributes
         G.add_edge('TOP', s_idx)
         G.add_edge(s_idx, g_idx, capacity = max(0, b-requiredBikes))
         G.add_edge(g_idx, t_idx, capacity = max(0, d-requiredDocks))
@@ -240,38 +235,29 @@ def distribute (radius, requiredBikes, requiredDocks):
         elif req_docks > 0:
             demand -= req_docks
             G.nodes[s_idx]['demand'] = -req_docks
-            # something else must be done here (demand?)
 
     G.nodes['TOP']['demand'] = -demand
-
-    for idx1, idx2 in it.combinations(stations.index.values, 2):
-        coord1 = (stations.at[idx1, 'lat'], stations.at[idx1, 'lon'])
-        coord2 = (stations.at[idx2, 'lat'], stations.at[idx2, 'lon'])
-        dist = haversine(coord1, coord2)
-        if dist <= radius:
-            dist = int(dist*1000)
-            # The edges must be bidirectional: g_idx1 <--> g_idx2
-            G.add_edge('g'+str(idx1), 'g'+str(idx2), weight=dist)
-            G.add_edge('g'+str(idx2), 'g'+str(idx1), weight=dist)
+    for edge in (R.edges(data=True)):
+        coords1,coords2 = edge[0],edge[1]
+        dist = int(edge[2]['weight']*1000)
+        idx1, idx2= stations.index[stations['lon']==coords1[1]], stations.index[stations['lon']==coords2[1]]
+        idx1, idx2 = idx1[0], idx2[0]
+        if idx1 not in bikes.index or idx2 not in bikes.index: continue
+        G.add_edge('g'+str(idx1), 'g'+str(idx2), weight=dist)
+        G.add_edge('g'+str(idx2), 'g'+str(idx1), weight=dist)
 
     err = False
 
     try:
         flowCost, flowDict = nx.network_simplex(G)
-
     except nx.NetworkXUnfeasible:
         err = True
-        print("No solution could be found")
-
+        return -1, 0
     except:
         err = True
-        print("***************************************")
-        print("*** Fatal error: Incorrect graph model ")
-        print("***************************************")
-
+        return -2, 0
     if not err:
         c = ("The total cost of transfering bikes is", flowCost/1000, "km")
-
     # We update the status of the stations according to the calculated transportation of bicycles
     disb = []
     for src in flowDict:
@@ -286,5 +272,5 @@ def distribute (radius, requiredBikes, requiredDocks):
                 bikes.at[idx_dst, nbikes] += b
                 bikes.at[idx_src, ndocks] += b
                 bikes.at[idx_dst, ndocks] -= b
-
+    #Returns the total cost of transfering bikes and the maximum cost between two stations
     return c, max(disb)
