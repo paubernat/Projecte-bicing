@@ -27,8 +27,7 @@ def Bounding_box(G):
         if node[0] > max_lat:
             max_lat = node[0]
 
-    coords = ((min_lat, min_lon), (max_lat, min_lon),
-              (max_lat, max_lon),  (min_lat, max_lon))
+    coords = ((min_lat, min_lon), (max_lat, min_lon),(max_lat, max_lon),  (min_lat, max_lon))
     return coords
 
 
@@ -62,12 +61,10 @@ def edge_adder(G, d):
     # according to the established distance, then reverse the nodes in
     # the quadrants according to their coordinates
     coord = Bounding_box(G)
-    lat_m, long_m = haversine(coord[0], coord[1]),
-    haversine(coord[1], coord[2])
+    lat_m, long_m = haversine(coord[0], coord[1]), haversine(coord[1], coord[2])
     lat_ang, long_ang = coord[1][0] - coord[0][0], coord[2][1] - coord[1][1]
     dist_ang = (d*lat_ang) / lat_m
-    lat_rows, long_columns = int((lat_ang//dist_ang)+1),
-    int((long_ang//dist_ang)+1)
+    lat_rows, long_columns = int((lat_ang//dist_ang)+1), int((long_ang//dist_ang)+1)
     A = [[[] for i in range(long_columns)] for j in range(lat_rows)]
     for node in list(G.node()):
         lat = int((node[0] - coord[0][0]) // dist_ang)
@@ -83,7 +80,7 @@ def create_graph(dist):
     bicing = DataFrame.from_records(pd.read_json(url)['data']['stations'], index='station_id')
     G = nx.Graph()
     for st in bicing.itertuples():
-        G.add_node((st.lat, st.lon), bikes=0, docks=0)
+        G.add_node((st.lat, st.lon))
 
     # we add all edges smaller than n.
     edge_adder(G, dist)
@@ -112,8 +109,7 @@ def addressesTOcoordinates(addresses):
         address1, address2 = addresses.split(',')
         location1 = geolocator.geocode(address1 + ', Barcelona')
         location2 = geolocator.geocode(address2 + ', Barcelona')
-        return (location1.latitude, location1.longitude),
-        (location2.latitude, location2.longitude)
+        return (location1.latitude, location1.longitude),(location2.latitude, location2.longitude)
     except:
         return None
 
@@ -299,3 +295,6 @@ def distribute(requiredBikes, requiredDocks, R):
     # Returns the total cost of transfering bikes and the maximum
     # cost between two stations
     return c, max(disb)
+
+G = create_graph(0.6)
+print_all(G)
