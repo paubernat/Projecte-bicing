@@ -60,11 +60,11 @@ El bot respon a les comandes següents:
 
 - **/path "direccio 1" "direccio 2":** usa la comanda Shortest_path(G,"direccio 1", "direccio 2") per a crear i enviar dues imatges, una només amb el camí entre les dues direccions i l'altre amb el graf de Barcelona inclòs.
 
-- **/components: envia un missatge amb el resultat de Number_of_non_connex_comonents(G)
+- **/components:** envia un missatge amb el resultat de Number_of_non_connex_comonents(G)
 
-- **/nodes:**envia un misstge amb el resultat de Number_of_nodes(G)
+- **/nodes:** envia un misstge amb el resultat de Number_of_nodes(G)
 
-- **/edges:**envia un missatge amb el resultat de Number_of_edges(G)
+- **/edges:** envia un missatge amb el resultat de Number_of_edges(G)
 
 - **/distribute x y:** usa la comanda distribute(G,x,y) i envia un missatge amb l'aresta amb de cost màxim i el cost total.
 
