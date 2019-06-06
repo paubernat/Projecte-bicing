@@ -71,7 +71,7 @@ El bot respon a les comandes següents:
 
 - **/authors:** envia un missatge amb el nom dels autors.
 
-- **/help:** envia un missatge amb informació d'ajuda per a l'us de les funcions.
+- **/help:** envia un missatge amb totes les comandes usables.
 
 ## Joc de proves:
 
