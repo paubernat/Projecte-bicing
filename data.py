@@ -134,14 +134,14 @@ def complete_new_edge(G, coords):
 def print_path_in_graph(G, path, file):
     m = StaticMap(800, 800)
     for node in list(G.node()):
-        marker = CircleMarker((node[1], node[0]), 'black', 5)
+        marker = CircleMarker((node[1], node[0]), 'black', 3)
         m.add_marker(marker)
     for edge in list(G.edges()):
         coords = ((edge[0][1], edge[0][0]), (edge[1][1], edge[1][0]))
         line = Line(coords, 'grey', 1)
         m.add_line(line)
     for node in path:
-        marker = CircleMarker((node[1], node[0]), 'blue', 3)
+        marker = CircleMarker((node[1], node[0]), 'red', 5)
         m.add_marker(marker)
     for i in range(len(path)-1):
         coords = ((path[i][1], path[i][0]), (path[i+1][1], path[i+1][0]))
@@ -156,11 +156,11 @@ def print_path_in_graph(G, path, file):
 def print_path_solo(path, file):
     m = StaticMap(800, 800)
     for node in path:
-        marker = CircleMarker((node[1], node[0]), 'blue', 3)
+        marker = CircleMarker((node[1], node[0]), 'red', 7)
         m.add_marker(marker)
     for i in range(len(path)-1):
         coords = ((path[i][1], path[i][0]), (path[i+1][1], path[i+1][0]))
-        line = Line(coords, 'blue', 2)
+        line = Line(coords, 'blue', 3)
         m.add_line(line)
     image = m.render()
     image.save(file)
