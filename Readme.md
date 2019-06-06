@@ -1,5 +1,5 @@
 # Projecte Bicing-Bot
-@bestbicingbot, per a facilitar els trajectes en bici per Barcelona
+_@bestbicingbot, per a facilitar els trajectes en bici per Barcelona_.
 
 ## Introducció
 
