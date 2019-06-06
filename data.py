@@ -11,8 +11,6 @@ from PIL import Image
 
 # create the bounding box of all the bicing stations coordinates
 # The function returns the vertices coordinates
-
-
 def Bounding_box(G):
     L = list(G.node())
     max_lat, max_lon = L[0]
@@ -170,7 +168,6 @@ def print_path_solo(path, file):
 
 # prints the smallest distance in time between 2 points.
 def shortest_path(G, adresses):
-    # funcio que la direccio es un node conegut.(g.has_node("dirreccio"))
     coords = addressesTOcoordinates(adresses)
     if coords is None:
         return None
@@ -301,8 +298,3 @@ def distribute(requiredBikes, requiredDocks, R):
     # Returns the total cost of transfering bikes and the maximum
     # cost between two stations
     return c, max(disb)
-
-
-G = create_graph(0.6)
-path = shortest_path(G, 'Passeig de Gràcia 21, Les Rambles 23')
-print_path_in_graph (G, path, "cucu.png")
