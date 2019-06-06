@@ -14,5 +14,5 @@ Calen les llibreries:
 "python-telegram-bot" per interactuar amb Telegram.
 
 Totes aquestes llibreries es poden instalar en el terminal de linux o Mac usant la comanda "pip3 install <<llibreria>>".
-D'altra banda, fa falta tenir un intèrpret de python per a poder executar el programa.
+D'altra banda, fa falta tenir un intèrpret de python per a poder executar els programes.
 
