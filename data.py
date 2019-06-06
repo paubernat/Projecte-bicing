@@ -301,3 +301,8 @@ def distribute(requiredBikes, requiredDocks, R):
     # Returns the total cost of transfering bikes and the maximum
     # cost between two stations
     return c, max(disb)
+
+
+G = create_graph(0.6)
+path = shortest_path(G, 'Passeig de Gràcia 21, Les Rambles 23')
+print_path_in_graph (G, path, "cucu.png")
