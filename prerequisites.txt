@@ -1,0 +1,18 @@
+Prerequisits:
+
+Per a poder utilitzar el bot de Telegram, només fa falta un compte de Telegram i cercar el bot "@bestbicingbot"
+
+D'altra banda, si es vol executar el bot en un servidor privat, modificar o afegir funcions o usar per a un altre objectiu:
+
+Calen les llibreries:
+
+"pandas" per a utilitzar DataFrames.
+"networkx" per a manipular grafs.
+"haversine" per a calcular distàncies entre coordenades.
+"geopy" per a calcular coordenades geogràfiques (latitud, longitud) a partir d'adreces.
+"staticmap" per pintar mapes.
+"python-telegram-bot" per interactuar amb Telegram.
+
+Totes aquestes llibreries es poden instalar en el terminal de linux o Mac usant la comanda "pip3 install <<llibreria>>".
+D'altra banda, fa falta tenir un intèrpret de python per a poder executar el programa.
+
