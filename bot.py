@@ -2,6 +2,8 @@ import telegram
 from telegram.ext import Updater
 from telegram.ext import CommandHandler, MessageHandler, Filters
 import data
+import random
+import os, sys
 
 # Invalid Command
 def unknown(bot, update):
@@ -62,11 +64,11 @@ def plotgraph(bot, update, user_data):
     if g == 0:
         errorhandler(2, bot, update)
     else:
-        file = "%d.png" % random.randint(10000000, 9999999)
-        print(file)
-        data.print_all(g, file)
-        bot.send_photo(chat_id=update.message.chat_id, photo=open(file, 'rb'))
-        os.remove(file)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+        name_file = "%d.png" % random.randint(1000000,9999999)
+        data.print_all(g,name_file)
+        bot.send_photo(chat_id=update.message.chat.id, photo = open(name_file,'rb'))
+        os.remove(name_file)
 
 #Gives the number of nodes of the graph created by the user
 def nodes(bot, update, user_data):
@@ -105,16 +107,16 @@ def path(bot, update, user_data):
         path = data.shortest_path(g, adresses)
         if path == None:
             errorhandler(3, bot, update)
-        map1 = data.print_path_solo(path)
-        imatge = map1.render()
-        imatge.save('path_solo.png')
-        bot.send_photo(chat_id=update.message.chat_id, photo=open('path_solo.png', 'rb'))
-        os.remove('path_solo.png')
-        map2 = data.print_path_in_graph(path)
-        imatge2 = map2.render()
-        imatge2.save('path_in_graph.png')
-        bot.send_photo(chat_id=update.message.chat_id, photo=open('path_in_graph.png', 'rb'))
-        os.remove('path_in_graph.png')
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+        name_file = "%d.png" % random.randint(1000000,9999999)
+        data.print_path_solo(g,name_file)
+        bot.send_photo(chat_id=update.message.chat.id, photo = open(name_file,'rb'))
+        os.remove(name_file)
+        bot.send_chat_action(chat_id=update.message.chat_id, action=telegram.ChatAction.UPLOAD_PHOTO)
+        name_file = "%d.png" % random.randint(1000000,9999999)
+        data.print_path_in_graph(g,name_file)
+        bot.send_photo(chat_id=update.message.chat.id, photo = open(name_file,'rb'))
+        os.remove(name_file)
 
 # Returns the total cost of d
 def distribute(bot, update, user_data):
