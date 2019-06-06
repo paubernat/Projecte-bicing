@@ -76,7 +76,10 @@ El bot respon a les comandes següents:
 ## Joc de proves:
 
 Els jocs de proves següents mostren l'ús de les comandes mencionades anteriorment.
-![alt text](https://github.com/paubernat/Projecte-bicing/blob/master/Screenshot_20190606-140841_Telegram(4).jpg)
+En aquestes captures de pantalla es pot observar l'output de algunes de les comandes utilitzades al bot de Telegram.
+
+![alt text](https://github.com/paubernat/Projecte-bicing/blob/master/Screenshot_20190606-140231_Telegram(2).jpg)
+![alt text](https://github.com/paubernat/Projecte-bicing/blob/master/Screenshot_20190606-140841_Telegram(5).jpg)
 
 ## Autors:
 
