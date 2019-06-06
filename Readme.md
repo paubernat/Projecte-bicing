@@ -75,6 +75,9 @@ El bot respon a les comandes següents:
 
 ## Joc de proves:
 
+Els jocs de proves següents mostren l'ús de les comandes mencionades anteriorment.
+![alt text](https://github.com/paubernat/Projecte-bicing/blob/master/Screenshot_20190606-140841_Telegram(4).jpg)
+
 ## Autors:
 
 Els autors d'aquest projecte som Andrea García Valdés i Pau Bernat Rodríguez, alumnes del 1er curs del GCED cursants de l'assignatura algorisimia i programació II.
